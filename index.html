@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual de ApeoWind</title>
+  <meta name="description" content="Manual de instrucciones de la aplicación ApeoWind: control de plataforma giroestabilizada, IMU, cámara Sony, PIDs y visión artificial.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3c?xml%20version=%271.0%27%20encoding=%27UTF-8%27?%3e%3csvg%20id=%27Capa_2%27%20data-name=%27Capa%202%27%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20421.41%20125.99%27%3e%3cdefs%3e%3cstyle%3e%20.cls-1%20{%20fill:%20%23fff;%20}%20%3c/style%3e%3c/defs%3e%3cg%20id=%27Capa_1-2%27%20data-name=%27Capa%201%27%3e%3cg%3e%3cpath%20class=%27cls-1%27%20d=%27M0,62.83c0-12.11,6.22-20.94,12.27-26.34,12.76-11.45,16.03-12.11,28.63-12.11h11.62v-5.07H1.15V2.78h85.25v87.21h-20.78v-24.05h-4.25c-2.13,17.18-14.89,26.18-31.42,26.18-18.16,0-29.94-13.25-29.94-29.29ZM65.61,38.78v-19.8l-29.94,20.62c-9.98,6.87-13.58,12.6-13.58,20.13,0,10.14,7.36,16.36,18,16.36,15.22,0,25.52-12.93,25.52-37.31Z%27/%3e%3cpath%20class=%27cls-1%27%20d=%27M107.52,2.78h20.78v21.27h4.25c2.45-13.42,13.25-23.72,30.43-23.72,23.72,0,40.25,18.82,40.25,45.81s-16.53,45.98-40.41,45.98c-17.02,0-27.82-10.47-30.27-23.89h-4.25v57.76h-20.78V2.78ZM182.46,46.3c0-17.83-11.13-29.78-27.16-29.78s-27,11.94-27,29.78,10.96,29.62,27,29.62,27.16-11.94,27.16-29.62Z%27/%3e%3cpath%20class=%27cls-1%27%20d=%27M215.51,46.47c0-27.98,18.82-46.47,48.1-46.47,30.92,0,49.25,19.96,46.8,52.36l-58.9-.16c-8.02,0-11.13-2.13-11.62-9.82h-4.58c-.16,1.31-.16,2.45-.16,3.76,0,19.47,10.8,31.25,28.31,31.25,14.07,0,23.89-8.18,27.32-21.11l15.22,13.42c-7.85,14.56-22.91,22.74-42.38,22.74-29.29,0-48.1-17.67-48.1-45.98ZM290.61,37.14c-1.8-13.74-12.44-21.6-27-21.6s-24.54,7.85-27.49,21.6h54.49Z%27/%3e%3cpath%20class=%27cls-1%27%20d=%27M395.43,24.38v-5.07s16.47,0,16.47,0h9.51s0-16.53,0-16.53h-32.34s-17.46,0-17.46,0c-28.47,0-48.1,16.2-48.1,43.36,0,27.49,19.63,46.3,48.1,46.3,9.3,0,17.65-2,24.69-5.62,5.45-2.81,10.11-6.59,13.81-11.2,5.78-7.19,9.24-16.37,9.71-26.94.04-.84.06-1.68.06-2.54,0-7.79-2.04-17.07-5.41-21.76h-19.04ZM395.28,29.59c2.76,4.6,4.31,10.23,4.31,16.55,0,9.98-3.78,18.25-10.06,23.53-1.23,1.04-2.56,1.96-3.98,2.75-1.76.99-3.66,1.78-5.68,2.36-2.58.74-5.34,1.14-8.26,1.14-4.61,0-8.83-.98-12.52-2.77-9.39-4.57-15.3-14.44-15.3-27.01,0-12.46,5.91-22.21,15.3-26.72,3.69-1.77,7.91-2.73,12.52-2.73,10.39,0,18.87,4.89,23.67,12.9Z%27/%3e%3c/g%3e%3c/g%3e%3c/svg%3e">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Botón de menú para móvil -->
+  <button class="menu-toggle" id="menuToggle" aria-label="Abrir o cerrar el menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- Menú lateral -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__marca">
+      <img class="sidebar__logo" alt="ApeoWind" src="data:image/svg+xml,%3c?xml%20version=%271.0%27%20encoding=%27UTF-8%27?%3e%3csvg%20id=%27Capa_2%27%20data-name=%27Capa%202%27%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20421.41%20125.99%27%3e%3cdefs%3e%3cstyle%3e%20.cls-1%20{%20fill:%20%23fff;%20}%20%3c/style%3e%3c/defs%3e%3cg%20id=%27Capa_1-2%27%20data-name=%27Capa%201%27%3e%3cg%3e%3cpath%20class=%27cls-1%27%20d=%27M0,62.83c0-12.11,6.22-20.94,12.27-26.34,12.76-11.45,16.03-12.11,28.63-12.11h11.62v-5.07H1.15V2.78h85.25v87.21h-20.78v-24.05h-4.25c-2.13,17.18-14.89,26.18-31.42,26.18-18.16,0-29.94-13.25-29.94-29.29ZM65.61,38.78v-19.8l-29.94,20.62c-9.98,6.87-13.58,12.6-13.58,20.13,0,10.14,7.36,16.36,18,16.36,15.22,0,25.52-12.93,25.52-37.31Z%27/%3e%3cpath%20class=%27cls-1%27%20d=%27M107.52,2.78h20.78v21.27h4.25c2.45-13.42,13.25-23.72,30.43-23.72,23.72,0,40.25,18.82,40.25,45.81s-16.53,45.98-40.41,45.98c-17.02,0-27.82-10.47-30.27-23.89h-4.25v57.76h-20.78V2.78ZM182.46,46.3c0-17.83-11.13-29.78-27.16-29.78s-27,11.94-27,29.78,10.96,29.62,27,29.62,27.16-11.94,27.16-29.62Z%27/%3e%3cpath%20class=%27cls-1%27%20d=%27M215.51,46.47c0-27.98,18.82-46.47,48.1-46.47,30.92,0,49.25,19.96,46.8,52.36l-58.9-.16c-8.02,0-11.13-2.13-11.62-9.82h-4.58c-.16,1.31-.16,2.45-.16,3.76,0,19.47,10.8,31.25,28.31,31.25,14.07,0,23.89-8.18,27.32-21.11l15.22,13.42c-7.85,14.56-22.91,22.74-42.38,22.74-29.29,0-48.1-17.67-48.1-45.98ZM290.61,37.14c-1.8-13.74-12.44-21.6-27-21.6s-24.54,7.85-27.49,21.6h54.49Z%27/%3e%3cpath%20class=%27cls-1%27%20d=%27M395.43,24.38v-5.07s16.47,0,16.47,0h9.51s0-16.53,0-16.53h-32.34s-17.46,0-17.46,0c-28.47,0-48.1,16.2-48.1,43.36,0,27.49,19.63,46.3,48.1,46.3,9.3,0,17.65-2,24.69-5.62,5.45-2.81,10.11-6.59,13.81-11.2,5.78-7.19,9.24-16.37,9.71-26.94.04-.84.06-1.68.06-2.54,0-7.79-2.04-17.07-5.41-21.76h-19.04ZM395.28,29.59c2.76,4.6,4.31,10.23,4.31,16.55,0,9.98-3.78,18.25-10.06,23.53-1.23,1.04-2.56,1.96-3.98,2.75-1.76.99-3.66,1.78-5.68,2.36-2.58.74-5.34,1.14-8.26,1.14-4.61,0-8.83-.98-12.52-2.77-9.39-4.57-15.3-14.44-15.3-27.01,0-12.46,5.91-22.21,15.3-26.72,3.69-1.77,7.91-2.73,12.52-2.73,10.39,0,18.87,4.89,23.67,12.9Z%27/%3e%3c/g%3e%3c/g%3e%3c/svg%3e">
+      <div class="sidebar__subtitulo">Manual de uso</div>
+    </div>
+
+    <nav class="sidebar__nav" aria-label="Índice del manual">
+      <a href="#introduccion">Introducción</a>
+      <a href="#que-es">¿Qué es APEO?</a>
+      <a href="#primeros-pasos">Primeros pasos</a>
+      <a href="#conexion">Conexión de plataforma e IMU</a>
+      <a href="#controlar-apeo">Controlar Apeo</a>
+      <a href="#control-manual" class="sub">— Control manual</a>
+      <a href="#rotar-eje" class="sub">— Rotar un eje en bucle</a>
+      <a href="#reproducir-csv" class="sub">— Reproducir archivo CSV</a>
+      <a href="#vision-artificial" class="sub">— Visión artificial</a>
+      <a href="#camara" class="sub">— Cámara ILX‑LR1</a>
+      <a href="#giroestabilizacion">Giroestabilización</a>
+      <a href="#calibrar-pids">Calibrar PIDs</a>
+      <a href="#descargar-imagenes">Descargar imágenes</a>
+      <a href="#ajustes">Ajustes</a>
+      <a href="#avisos">Mensajes y avisos</a>
+      <a href="#glosario">Glosario</a>
+    </nav>
+  </aside>
+
+  <!-- Velo para cerrar el menú en móvil -->
+  <div class="overlay" id="overlay"></div>
+
+  <main class="contenido">
+
+    <!-- ───────────────────────── INTRODUCCIÓN ───────────────────────── -->
+    <section id="introduccion">
+      <span class="kicker">Manual de instrucciones</span>
+      <h1>ApeoWind</h1>
+      <p class="lead">
+        ApeoWind controla una <strong>plataforma giroestabilizada de tres ejes</strong> con una
+        cámara Sony ILX‑LR1. Estabiliza la imagen frente a las vibraciones del vehículo usando
+        una unidad inercial (IMU), permite mover la plataforma a mano o de forma automática,
+        reproducir trayectorias grabadas, calibrar el control de los motores (PIDs) y gestionar la
+        cámara y la descarga de las fotos.
+      </p>
+
+      <div class="callout callout--info">
+        <strong>¿Para quién es este manual?</strong> Para el operador de la plataforma. Los conceptos
+        técnicos (giroestabilización, PIDs, cuaterniones) se explican en lenguaje llano en cada
+        sección y se resumen en el <a href="#glosario">glosario</a>.
+      </div>
+
+      <figure class="captura">
+        <img src="images/inicio.png" alt="Pantalla de bienvenida de ApeoWind">
+        <figcaption>Pantalla de inicio: «Bienvenido a ApeoWind».</figcaption>
+      </figure>
+
+      <h3>Las tres zonas de la ventana</h3>
+      <ul>
+        <li><strong>Menú lateral (izquierda):</strong> las tres áreas principales —
+          <em>Descargar imágenes</em>, <em>Controlar Apeo</em> y <em>Calibrar PIDs</em> — más el
+          acceso a <em>Ajustes</em>.</li>
+        <li><strong>Zona central:</strong> la página activa.</li>
+        <li><strong>Paneles inferiores:</strong> cuatro pestañas siempre visibles —
+          <em>Datos plataforma</em>, <em>Datos IMU</em>, <em>Mensajes cámara</em> e
+          <em>Imágenes descargadas</em> — y una banda de avisos.</li>
+      </ul>
+    </section>
+
+    <!-- ───────────────────────── QUÉ ES APEO ───────────────────────── -->
+    <section id="que-es">
+      <h2>¿Qué es APEO?</h2>
+      <p class="lead">
+        APEO inspecciona de forma remota las <strong>palas de los aerogeneradores en operación</strong>,
+        capturando su comportamiento geométrico y estructural real <strong>sin necesidad de parar la
+        turbina</strong>, e información que antes era imposible de obtener.
+      </p>
+      <p>
+        El equipo se monta sobre una plataforma giroestabilizada y <strong>ApeoWind</strong> es la
+        aplicación que lo gobierna: estabiliza la plataforma, sigue las palas y maneja la cámara para
+        obtener imágenes nítidas pese al movimiento del vehículo y a la rotación de la turbina.
+      </p>
+
+      <h3>Cómo funciona</h3>
+      <ol class="pasos">
+        <li><strong>Integración:</strong> el equipo se monta en la plataforma —vehículo, dron o barco— y
+          se despliega en minutos, sin parar la turbina.</li>
+        <li><strong>Seguimiento autónomo de palas:</strong> detecta y sigue cada pala en tiempo real,
+          adaptándose al viento y a la velocidad de rotación.</li>
+        <li><strong>Captura y análisis:</strong> registra imágenes de alta resolución con la pala en
+          movimiento, para su posterior análisis.</li>
+      </ol>
+
+      <h3>Qué permite detectar</h3>
+      <p>La inspección visual busca, entre otros:</p>
+      <ul class="dos-columnas">
+        <li>Suciedad y acumulaciones</li>
+        <li>Desgaste y degradación superficial</li>
+        <li>Impactos de aves</li>
+        <li>Presencia de hielo</li>
+        <li>Estado del pararrayos</li>
+        <li>Grietas y defectos de superficie</li>
+      </ul>
+
+      <div class="callout callout--info">
+        <strong>Alcance de esta aplicación.</strong> ApeoWind controla la <strong>plataforma
+        giroestabilizada</strong>, la <strong>cámara Sony ILX‑LR1</strong> y el <strong>seguimiento de
+        palas (visión artificial)</strong>. El sistema APEO completo puede integrar además otras
+        tecnologías (telemetría LiDAR, imagen térmica o generación de modelos 3D) que no forman parte de
+        esta interfaz.
+      </div>
+    </section>
+
+    <!-- ───────────────────────── PRIMEROS PASOS ───────────────────────── -->
+    <section id="primeros-pasos">
+      <h2>Primeros pasos</h2>
+      <p>La primera vez, configura las conexiones en <a href="#ajustes">Ajustes</a> antes de operar:</p>
+      <ol class="pasos">
+        <li>Elige el modo de la <strong>plataforma</strong> (Virtual, Serie o Ethernet) y su endpoint.</li>
+        <li>Elige el modo del <strong>IMU</strong> y su endpoint.</li>
+        <li>Si vas a usar la cámara, configura su <strong>nombre, IP y MAC</strong>.</li>
+        <li>Comprueba la banda de <a href="#avisos">avisos</a>: si todo está en verde (sin avisos
+          rojos), estás listo.</li>
+        <li>Ve a <strong>Controlar Apeo</strong> para empezar a operar.</li>
+      </ol>
+
+      <div class="callout callout--aviso">
+        El cambio de <strong>modo de conexión</strong> de la plataforma o del IMU (Virtual ↔ Serie ↔
+        Ethernet) <strong>se aplica al reiniciar</strong> la aplicación. El resto de ajustes se
+        aplican al momento.
+      </div>
+
+      <div class="callout callout--tip">
+        <strong>¿Sin hardware a mano?</strong> Usa el modo <em>Virtual</em> para la plataforma y el
+        IMU. Podrás familiarizarte con la interfaz, e incluso fijar a mano la actitud del IMU virtual
+        para ver cómo responde la giroestabilización.
+      </div>
+    </section>
+
+    <!-- ───────────────────────── CONEXIÓN ───────────────────────── -->
+    <section id="conexion">
+      <h2>Conexión de plataforma e IMU</h2>
+      <p>
+        Tanto la plataforma como el IMU (VectorNav VN‑100) pueden conectarse de tres formas. Se
+        eligen de forma independiente en <a href="#ajustes">Ajustes</a>.
+      </p>
+
+      <div class="tarjetas">
+        <div class="tarjeta">
+          <div class="tarjeta__icono">🧪</div>
+          <h4>Virtual</h4>
+          <p>Dispositivo simulado, sin hardware. La plataforma virtual responde con un retardo
+            configurable; el IMU virtual emite la actitud (roll/pitch/yaw) que fijes a mano.</p>
+        </div>
+        <div class="tarjeta">
+          <div class="tarjeta__icono">🔌</div>
+          <h4>Física (puerto serie)</h4>
+          <p>Por cable USB/COM. Requiere seleccionar el puerto y ajustar sus parámetros para recibir
+            datos a 200 Hz (ver aviso).</p>
+        </div>
+        <div class="tarjeta">
+          <div class="tarjeta__icono">🌐</div>
+          <h4>Física (Ethernet)</h4>
+          <p>A través de un conversor serie↔Ethernet. Requiere la IP del conversor y el puerto
+            (por defecto <code>2525</code>).</p>
+        </div>
+      </div>
+
+      <h3>Configuración del puerto serie (importante)</h3>
+      <p>
+        Para que el flujo de datos llegue a 200 Hz sin atascos, ajusta el puerto COM en Windows:
+      </p>
+      <div class="callout callout--info">
+        <strong>Administrador de dispositivos → el puerto COM → Propiedades →
+        «Configuración del puerto» → «Opciones avanzadas»:</strong>
+        <ul class="sin-margen">
+          <li>Recepción (Bytes) = <strong>64</strong></li>
+          <li>Transmisión (Bytes) = <strong>64</strong></li>
+          <li>Temporizador de latencia (mseg) = <strong>1</strong></li>
+        </ul>
+      </div>
+
+      <h3>Reconexión automática</h3>
+      <p>
+        En los modos físicos, si se pierde la conexión la aplicación reintenta cada cierto tiempo
+        (configurable en <em>«Tiempo para intentar reconectar con la plataforma»</em>). No hace falta
+        reiniciar.
+      </p>
+
+      <figure class="captura">
+        <img src="images/ajustes-conexion.png" alt="Ajustes de conexión de la plataforma">
+        <figcaption>Ajustes: selección de modo y endpoint de la plataforma.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ───────────────────────── CONTROLAR APEO ───────────────────────── -->
+    <section id="controlar-apeo">
+      <h2>Controlar Apeo</h2>
+      <p>
+        Es el centro de operaciones. Arriba, el interruptor <strong>«Giroestabilizar»</strong>
+        activa o desactiva la estabilización. Debajo, cuatro pestañas para mover la plataforma de
+        distintas formas, y en la parte inferior el panel de la <a href="#camara">cámara Sony</a>.
+      </p>
+
+      <div class="callout callout--aviso">
+        <strong>Giroestabilizar y control manual conviven con cuidado.</strong> Con la
+        giroestabilización activa, la plataforma compensa el movimiento del vehículo de forma
+        automática. El control manual y los modos automáticos suman su consigna sobre esa
+        estabilización.
+      </div>
+
+      <figure class="captura">
+        <img src="images/controlar-apeo.png" alt="Página Controlar Apeo con sus pestañas">
+        <figcaption>Página «Controlar Apeo»: interruptor Giroestabilizar y pestañas de control.</figcaption>
+      </figure>
+
+      <!-- Control manual -->
+      <article id="control-manual">
+        <h3>Control manual</h3>
+        <p>
+          Cuatro mandos circulares, uno por eje: <strong>Roll</strong>, <strong>Pitch</strong>,
+          <strong>Yaw</strong> y <strong>Cuarto eje</strong>. Cada mando (un
+          «dial‑vernier») combina ajuste grueso y fino:
+        </p>
+        <table class="tabla">
+          <thead><tr><th>Elemento</th><th>Con el ratón</th><th>Con las flechas del teclado</th></tr></thead>
+          <tbody>
+            <tr><td>Aro exterior (grueso)</td><td>Clic y arrastrar</td><td>← → = ±1° &nbsp;·&nbsp; ↑ ↓ = ±10°</td></tr>
+            <tr><td>Campo decimal</td><td>Escribir el ángulo (decimal con coma)</td><td>← → = ±0,001°</td></tr>
+            <tr><td>Vernier (fino)</td><td>Arrastrar o rueda del ratón</td><td>← → = ±0,0001° &nbsp;·&nbsp; ↑ ↓ = ±0,001°</td></tr>
+          </tbody>
+        </table>
+        <p class="nota">Los valores se ajustan al rango [−180°, 180°].</p>
+        <figure class="captura">
+          <img src="images/control-manual.png" alt="Cuatro diales de control manual">
+          <figcaption>«Control manual»: un dial‑vernier por cada eje.</figcaption>
+        </figure>
+      </article>
+
+      <!-- Rotar un eje -->
+      <article id="rotar-eje">
+        <h3>Rotar un eje en bucle</h3>
+        <p>Gira de forma continua el eje elegido, incrementando su ángulo a la frecuencia indicada.</p>
+        <ol class="pasos">
+          <li>Elige el <strong>Eje</strong> (Roll / Pitch / Yaw).</li>
+          <li>Fija los <strong>Hertzios</strong> (frecuencia) y el <strong>Incremento</strong> (cuánto avanza cada ciclo).</li>
+          <li>Activa <strong>«Sentido invertido»</strong> si quieres girar al revés.</li>
+          <li>Pulsa <strong>«Rotar»</strong> para arrancar o detener.</li>
+        </ol>
+        <p class="nota">Mientras rota, el selector de eje se bloquea para evitar saltos bruscos.</p>
+        <figure class="captura">
+          <img src="images/rotar-eje.png" alt="Control Rotar un eje en bucle">
+          <figcaption>«Rotar un eje en bucle».</figcaption>
+        </figure>
+      </article>
+
+      <!-- Reproducir CSV -->
+      <article id="reproducir-csv">
+        <h3>Reproducir archivo CSV</h3>
+        <p>Reproduce sobre la plataforma una secuencia de posiciones grabada en un archivo CSV.</p>
+        <ol class="pasos">
+          <li>Elige un archivo reciente en el desplegable <strong>«Archivo»</strong> o pulsa <strong>«Buscar…»</strong>.</li>
+          <li>Abre <strong>«Configuración de reproducción»</strong> para ajustar:
+            <ul>
+              <li>Qué ejes se reproducen: <em>Roll</em>, <em>Pitch</em>, <em>Yaw</em>, <em>Cuarto eje</em>.</li>
+              <li><strong>Bucle</strong>: repetir al terminar.</li>
+              <li><strong>Aleatoriedad</strong> por eje: añade una variación aleatoria.</li>
+              <li><strong>Incremento</strong> por eje: añade un desfase constante.</li>
+            </ul>
+          </li>
+          <li>Pulsa ▶ para reproducir y ⏸ para pausar.</li>
+          <li><strong>«Guardar CSV»</strong> guarda las posiciones recibidas de la plataforma como un archivo nuevo.</li>
+        </ol>
+
+        <details class="acordeon">
+          <summary>Formato del archivo CSV</summary>
+          <p>El archivo es texto plano:</p>
+          <ul>
+            <li>La <strong>primera línea</strong> es un número: el <strong>tiempo entre muestras</strong> (en milisegundos).</li>
+            <li>Cada línea siguiente tiene <strong>8 campos separados por «;»</strong>. Los cuatro
+              primeros son <code>Roll;Pitch;Yaw;CuartoEje</code> (en grados, con el punto como
+              separador decimal); el resto se ignoran.</li>
+            <li>Las líneas que no tengan exactamente 8 campos se descartan.</li>
+          </ul>
+          <pre><code>20
+1.50;-2.25;0.00;90.50;0;0;0;0
+1.55;-2.20;0.00;90.48;0;0;0;0</code></pre>
+        </details>
+
+        <figure class="captura">
+          <img src="images/reproducir-csv.png" alt="Control Reproducir archivo CSV">
+          <figcaption>«Reproducir archivo CSV» con la configuración desplegada.</figcaption>
+        </figure>
+      </article>
+
+      <!-- Visión artificial -->
+      <article id="vision-artificial">
+        <h3>Visión artificial</h3>
+        <p>
+          Recibe datos de un servidor externo de visión por computador (por ejemplo, seguimiento de
+          palas de aerogenerador) a través de la red (UDP).
+        </p>
+        <ol class="pasos">
+          <li>Configura la <strong>IP del servidor</strong> en <a href="#ajustes">Ajustes →
+            «Servidor de visión artificial»</a>.</li>
+          <li>Pulsa el botón ▶ para iniciar o detener la recepción.</li>
+          <li>Selecciona la <strong>Pala</strong> a vigilar (Pala 1 / 2 / 3).</li>
+        </ol>
+        <figure class="captura">
+          <img src="images/vision-artificial.png" alt="Control de visión artificial">
+          <figcaption>«Visión artificial»: arranque y selección de pala.</figcaption>
+        </figure>
+      </article>
+
+      <!-- Cámara -->
+      <article id="camara">
+        <h3>Cámara Sony ILX‑LR1</h3>
+        <p>
+          La plataforma monta una <strong>Sony ILX‑LR1</strong>, una cámara industrial full‑frame de
+          lente intercambiable <strong>sin visor ni controles físicos</strong>: está pensada para
+          manejarse en remoto. ApeoWind la controla a través del <strong>Sony Camera Remote SDK</strong>,
+          que da acceso al disparo, el enfoque, el vídeo en directo y todos los ajustes desde la
+          aplicación.
+        </p>
+
+        <table class="tabla">
+          <thead><tr><th>Característica</th><th>Especificación</th></tr></thead>
+          <tbody>
+            <tr><td>Tipo</td><td>Cámara industrial de lente intercambiable (uso en dron/UAV e industrial remoto)</td></tr>
+            <tr><td>Sensor</td><td>Full‑frame (35 mm) retroiluminado Exmor R CMOS</td></tr>
+            <tr><td>Resolución</td><td>≈ 61,0 megapíxeles efectivos</td></tr>
+            <tr><td>Procesador</td><td>BIONZ XR</td></tr>
+            <tr><td>Montura</td><td>Sony E (ópticas intercambiables)</td></tr>
+            <tr><td>Sensibilidad</td><td>ISO 100–32000</td></tr>
+            <tr><td>Obturador</td><td>Mecánico y electrónico</td></tr>
+            <tr><td>Disparo continuo</td><td>Hasta 3 fps</td></tr>
+            <tr><td>Formatos de archivo</td><td>RAW (ARW), JPEG y HEIF</td></tr>
+            <tr><td>Conectividad</td><td>USB‑C (USB 3.2), HDMI micro (tipo D), Wi‑Fi, Ethernet (LAN), ranura SD</td></tr>
+            <tr><td>Control remoto</td><td>Sony Camera Remote SDK (el que utiliza ApeoWind)</td></tr>
+            <tr><td>Alimentación</td><td>Batería o entrada de corriente continua para operación prolongada</td></tr>
+            <tr><td>Peso</td><td>≈ 243 g (cuerpo)</td></tr>
+            <tr><td>Dimensiones</td><td>≈ 100 × 74 × 42,5 mm</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout--info">
+          Al no tener pantalla ni botones, <strong>todo se hace desde ApeoWind</strong>: encuadrar con
+          el vídeo en directo y la retícula, enfocar, disparar y ajustar la exposición. Configura su
+          conexión (nombre, IP y MAC) en <a href="#ajustes">Ajustes → Cámara</a>.
+        </div>
+
+        <h4>Vídeo en directo y ajustes en la aplicación</h4>
+        <p>
+          En la parte inferior de «Controlar Apeo» se ve el <strong>vídeo en directo</strong> de la
+          cámara, con la retícula y los recuadros de enfoque superpuestos. El panel lateral derecho
+          agrupa todos los ajustes.
+        </p>
+
+        <h4>Vista y encuadre</h4>
+        <ul>
+          <li><strong>Streaming</strong>: interruptor para activar/desactivar la vista en directo.</li>
+          <li><strong>Zoom de enfoque</strong>: amplía la imagen para confirmar el enfoque manual.</li>
+          <li><strong>Retícula</strong> y <strong>color</strong>: tipo de retícula y su color (con transparencia) para ayudar a encuadrar.</li>
+        </ul>
+
+        <h4>Disparo</h4>
+        <ul>
+          <li><strong>«Enfocar»</strong>: fija el enfoque (equivalente a mantener el disparador a medio recorrido).</li>
+          <li><strong>«Seguir enfocando tras foto»</strong>: mantiene el enfoque activo después de disparar.</li>
+          <li><strong>«Milisegundos enfoque»</strong> y <strong>«Milisegundos tras hacer foto»</strong>: tiempos de la secuencia de disparo.</li>
+          <li><strong>«Hacer foto»</strong>: dispara. El contador <em>«Fotos realizadas»</em> lleva la cuenta.</li>
+        </ul>
+
+        <h4>Ajustes de la cámara</h4>
+        <p>Las opciones disponibles dependen del modo de la cámara. Agrupadas en:</p>
+        <ul class="dos-columnas">
+          <li><strong>Principales:</strong> Programa, Velocidad obturador, Apertura, ISO, EV.</li>
+          <li><strong>Secundarias:</strong> Formato, Tipo de archivo RAW, Calidad JPEG, Tamaño de la
+            imagen, Ratio de aspecto, Modo de disparo, Balance de blancos, Optimizador de rango
+            dinámico, Área de enfoque, Modo de medición, Modo de enfoque, Destino de guardado,
+            Directorio destino y Tamaño de imagen de guardado en PC.</li>
+        </ul>
+
+        <figure class="captura">
+          <img src="images/camara.png" alt="Panel de la cámara Sony con streaming y ajustes">
+          <figcaption>Panel de la cámara: vídeo en directo y ajustes laterales.</figcaption>
+        </figure>
+      </article>
+    </section>
+
+    <!-- ───────────────────────── GIROESTABILIZACIÓN ───────────────────────── -->
+    <section id="giroestabilizacion">
+      <h2>Giroestabilización</h2>
+      <p>
+        Es lo que mantiene la cámara apuntando estable mientras el vehículo se mueve. Un
+        <strong>IMU</strong> (VectorNav VN‑100) montado en la base mide la inclinación del vehículo,
+        y la plataforma corrige en sentido contrario para cancelarla.
+      </p>
+
+      <h3>El montaje</h3>
+      <ul>
+        <li><strong>IMU:</strong> atornillado a la base del vehículo (debajo de la plataforma). Mide la actitud del vehículo.</li>
+        <li><strong>Plataforma:</strong> el cardán de tres ejes (Yaw → Pitch → Roll) que se mueve por encima.</li>
+        <li><strong>Cámara:</strong> sobre la plataforma; hereda la estabilización.</li>
+      </ul>
+
+      <h3>Cómo se activa</h3>
+      <p>
+        Con el interruptor <strong>«Giroestabilizar»</strong> en la página «Controlar Apeo». Mientras
+        está activo, la plataforma compensa automáticamente el cabeceo y balanceo del vehículo.
+      </p>
+
+      <h3>Ajustes que debes conocer</h3>
+      <dl class="definiciones">
+        <dt>Montaje del IMU — Azimut</dt>
+        <dd>Desalineación en grados entre el eje X del IMU y el «delante» de la plataforma. Si el IMU
+          está girado respecto a la plataforma, este valor lo compensa.</dd>
+
+        <dt>Montaje del IMU — Boca abajo / Boca arriba</dt>
+        <dd>Indica si el IMU está montado invertido. Junto al azimut, define la orientación del IMU
+          respecto a la plataforma (se muestra el cuaternión calculado).</dd>
+
+        <dt>Omitir el yaw del IMU</dt>
+        <dd>El yaw (rumbo) del IMU no es fiable sin doble antena GPS. Si lo activas, solo se
+          estabilizan <em>roll</em> y <em>pitch</em>; las rotaciones de rumbo del vehículo no se
+          corrigen.</dd>
+
+        <dt>Suavizado de movimientos</dt>
+        <dd>Interpola los movimientos para que no sean bruscos. <strong>0</strong> = sin suavizar
+          (instantáneo, más rígido); valores hacia <strong>1</strong> = más suave, con algo más de
+          retardo.</dd>
+      </dl>
+
+      <div class="callout callout--info">
+        El sistema mantiene la orientación <em>relativa</em> a la que el IMU vio al arrancar: no
+        necesita calibrar el norte. El roll y el pitch se anclan a la gravedad (referencia absoluta).
+        <br>Para el fundamento matemático completo (cuaterniones, SLERP, calibración) consulta
+        <code>docs/Giroestabilizacion.md</code>.
+      </div>
+
+      <figure class="captura">
+        <img src="images/giroestabilizacion-ajustes.png" alt="Ajustes de giroestabilización">
+        <figcaption>Ajustes de giroestabilización: omitir yaw, montaje y suavizado.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ───────────────────────── CALIBRAR PIDS ───────────────────────── -->
+    <section id="calibrar-pids">
+      <h2>Calibrar PIDs</h2>
+      <p>
+        Los <strong>PID</strong> determinan cómo de enérgicamente responde cada eje a una orden de
+        movimiento. Se ajustan por eje hasta que el comportamiento sea estable (sin oscilar ni
+        responder demasiado lento).
+      </p>
+
+      <table class="tabla">
+        <thead><tr><th>Parámetro</th><th>Qué hace</th></tr></thead>
+        <tbody>
+          <tr><td><strong>P</strong> (Proporcional)</td><td>Responde al error actual. Más P = respuesta más enérgica.</td></tr>
+          <tr><td><strong>I</strong> (Integral)</td><td>Corrige el error acumulado (elimina el desvío permanente).</td></tr>
+          <tr><td><strong>D</strong> (Derivativo)</td><td>Amortigua según la velocidad de cambio (evita el sobrepaso).</td></tr>
+          <tr><td><strong>Dir</strong> (Dirección)</td><td>Sentido del motor: Normal (+1) o Invertido (−1).</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Flujo de trabajo</h3>
+      <ol class="pasos">
+        <li>Elige el <strong>Eje</strong> (Roll / Pitch / Yaw / Cuarto eje).</li>
+        <li>Ajusta <strong>P</strong>, <strong>I</strong>, <strong>D</strong> y <strong>Dirección</strong>.</li>
+        <li><strong>«Guardar en RAM»</strong>: envía los valores a la plataforma para probarlos en vivo (no permanentes).</li>
+        <li>Anota cómo se comportó en la columna <em>«Descripción»</em> del histórico.</li>
+        <li>Repite hasta dar con la combinación adecuada.</li>
+        <li><strong>«Guardar en ROM»</strong>: graba en la memoria permanente de la plataforma (sobrevive al apagado).</li>
+        <li><strong>«Cargar de ROM»</strong>: recupera los valores guardados en la plataforma.</li>
+      </ol>
+
+      <div class="callout callout--tip">
+        El <strong>histórico</strong> de la sesión registra cada combinación enviada a la RAM. Haz
+        clic en una fila para recuperar sus valores en el editor y compararlos.
+      </div>
+
+      <div class="callout callout--aviso">
+        «Guardar en RAM» es temporal y sirve para probar; «Guardar en ROM» es permanente. Graba en
+        ROM solo cuando estés conforme con el comportamiento.
+      </div>
+
+      <figure class="captura">
+        <img src="images/calibrar-pids.png" alt="Página de calibración de PID">
+        <figcaption>«Calibración de PID»: histórico de la sesión y editor por eje.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ───────────────────────── DESCARGAR IMÁGENES ───────────────────────── -->
+    <section id="descargar-imagenes">
+      <h2>Descargar imágenes</h2>
+      <p>
+        Transfiere al PC las fotos almacenadas en la tarjeta de la cámara. Al entrar, la aplicación
+        se conecta a la cámara para la transferencia de archivos
+        (<em>«Conectando con la cámara…»</em>).
+      </p>
+      <ol class="pasos">
+        <li>Navega por las <strong>carpetas</strong> de la tarjeta en el árbol de la izquierda.</li>
+        <li>Revisa las <strong>miniaturas</strong> a la derecha.</li>
+        <li>Selecciona las imágenes y <strong>descárgalas</strong> al PC.</li>
+      </ol>
+      <p class="nota">
+        Las imágenes descargadas aparecen también en la pestaña inferior <em>«Imágenes
+        descargadas»</em>.
+      </p>
+      <figure class="captura">
+        <img src="images/descargar-imagenes.png" alt="Página de descarga de imágenes">
+        <figcaption>«Descargar imágenes»: árbol de carpetas y miniaturas.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ───────────────────────── AJUSTES ───────────────────────── -->
+    <section id="ajustes">
+      <h2>Ajustes</h2>
+      <p>Referencia completa de la configuración, agrupada como aparece en la aplicación.</p>
+
+      <h3>Apariencia</h3>
+      <table class="tabla">
+        <tbody>
+          <tr><td><strong>Tema</strong></td><td>Sistema / Claro / Oscuro.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Plataforma</h3>
+      <table class="tabla">
+        <tbody>
+          <tr><td><strong>Plataforma a utilizar</strong></td><td>Virtual / Física (puerto serie) / Física (Ethernet). <em>Se aplica al reiniciar.</em></td></tr>
+          <tr><td><strong>Puerto serie (plataforma)</strong></td><td>Puerto COM (con botón de refresco). Solo en modo serie.</td></tr>
+          <tr><td><strong>Conexión Ethernet (plataforma)</strong></td><td>IP y puerto (por defecto 2525). Solo en modo Ethernet.</td></tr>
+          <tr><td><strong>Retardo de la plataforma virtual</strong></td><td>Milisegundos de respuesta simulada (por defecto 50). Solo en modo virtual.</td></tr>
+          <tr><td><strong>Tiempo para intentar reconectar con la plataforma</strong></td><td>Segundos entre reintentos de conexión. Solo en modos físicos.</td></tr>
+          <tr><td><strong>Ceros de la plataforma</strong></td><td>Offset de Roll / Pitch / Yaw / Cuarto eje para fijar el origen de cada eje.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>IMU</h3>
+      <table class="tabla">
+        <tbody>
+          <tr><td><strong>IMU a utilizar</strong></td><td>Virtual / Físico (puerto serie) / Físico (Ethernet). <em>Se aplica al reiniciar.</em></td></tr>
+          <tr><td><strong>Puerto serie (IMU)</strong></td><td>Puerto COM del VN‑100 (con refresco). Solo en modo serie.</td></tr>
+          <tr><td><strong>Conexión Ethernet (IMU)</strong></td><td>IP y puerto (por defecto 2525). Solo en modo Ethernet.</td></tr>
+          <tr><td><strong>Actitud del IMU virtual</strong></td><td>Roll / Pitch / Yaw que emite el IMU simulado. Se aplica en vivo.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Giroestabilización</h3>
+      <table class="tabla">
+        <tbody>
+          <tr><td><strong>Omitir el yaw del IMU</strong></td><td>Estabiliza solo roll y pitch (ver <a href="#giroestabilizacion">Giroestabilización</a>).</td></tr>
+          <tr><td><strong>Montaje del IMU</strong></td><td>Azimut (°) y orientación (boca arriba/abajo).</td></tr>
+          <tr><td><strong>Suavizado de movimientos</strong></td><td>De 0 (instantáneo) a 1 (muy suave). Por defecto 0,5.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Cámara</h3>
+      <table class="tabla">
+        <tbody>
+          <tr><td><strong>Nombre</strong></td><td>Nombre de la cámara (con botón de autodetección).</td></tr>
+          <tr><td><strong>Dirección IP</strong></td><td>IP de la cámara.</td></tr>
+          <tr><td><strong>Dirección MAC</strong></td><td>MAC de la cámara.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Servidor de visión artificial</h3>
+      <table class="tabla">
+        <tbody>
+          <tr><td><strong>Dirección IP</strong></td><td>IP del servidor de visión artificial (UDP).</td></tr>
+        </tbody>
+      </table>
+
+      <figure class="captura">
+        <img src="images/ajustes.png" alt="Página de ajustes completa">
+        <figcaption>Página de «Ajustes».</figcaption>
+      </figure>
+    </section>
+
+    <!-- ───────────────────────── AVISOS ───────────────────────── -->
+    <section id="avisos">
+      <h2>Mensajes y avisos</h2>
+      <p>
+        En la parte inferior, una banda muestra avisos según el estado del sistema. Si aparecen en
+        rojo, hay algo que resolver antes de operar con normalidad.
+      </p>
+      <table class="tabla">
+        <thead><tr><th>Aviso</th><th>Significado y solución</th></tr></thead>
+        <tbody>
+          <tr><td>No se ha configurado el puerto serie de la plataforma</td><td>Modo serie sin puerto elegido. Selecciónalo en Ajustes.</td></tr>
+          <tr><td>No hay conexión con la plataforma</td><td>La plataforma está desconectada. Revisa cable/IP, alimentación y reintentos.</td></tr>
+          <tr><td>La plataforma no está enviando datos a la frecuencia esperada</td><td>Cadencia anómala. Revisa la configuración del puerto (buffers y latencia).</td></tr>
+          <tr><td>No se ha configurado el puerto serie del IMU</td><td>Modo serie sin puerto elegido para el IMU.</td></tr>
+          <tr><td>No hay conexión con el IMU</td><td>El IMU está desconectado. Revisa conexión y alimentación.</td></tr>
+          <tr><td>El IMU no está enviando datos a la frecuencia esperada</td><td>Cadencia anómala del IMU. Revisa el puerto.</td></tr>
+          <tr><td>No se ha configurado la cámara</td><td>Falta IP o MAC de la cámara en Ajustes.</td></tr>
+          <tr><td>No se ha configurado el servidor de visión artificial</td><td>Falta la IP del servidor en Ajustes.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ───────────────────────── GLOSARIO ───────────────────────── -->
+    <section id="glosario">
+      <h2>Glosario</h2>
+      <dl class="definiciones">
+        <dt>Roll / Pitch / Yaw</dt>
+        <dd>Los tres giros de la plataforma: balanceo (roll), cabeceo (pitch) y guiñada o rumbo (yaw).</dd>
+
+        <dt>Cuarto eje</dt>
+        <dd>Un eje adicional de la plataforma más allá de roll/pitch/yaw, según el diseño del cardán.</dd>
+
+        <dt>IMU (VectorNav VN‑100)</dt>
+        <dd>Unidad de medición inercial. Mide la orientación del vehículo para la giroestabilización.</dd>
+
+        <dt>Giroestabilización</dt>
+        <dd>Compensación automática del movimiento del vehículo para mantener la cámara estable.</dd>
+
+        <dt>PID</dt>
+        <dd>Control Proporcional‑Integral‑Derivativo: parámetros que ajustan la respuesta de cada motor.</dd>
+
+        <dt>Cuaternión</dt>
+        <dd>Forma matemática de representar una orientación en 3D sin los problemas de los ángulos.
+          Se usa internamente para la estabilización.</dd>
+
+        <dt>Endpoint</dt>
+        <dd>El «destino» de la conexión: el puerto COM (serie) o la IP y puerto (Ethernet).</dd>
+      </dl>
+
+      <p class="pie">
+        ApeoWind · Manual de instrucciones<br>
+        Desarrollado por <strong>Azimutal</strong> · <a href="mailto:contact@azimutal.com">contact@azimutal.com</a>
+      </p>
+    </section>
+
+  </main>
+
+  <button class="ir-arriba" id="irArriba" aria-label="Volver arriba">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>

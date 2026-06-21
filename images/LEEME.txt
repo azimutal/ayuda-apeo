@@ -1,0 +1,30 @@
+Capturas de pantalla del manual de ApeoWind
+============================================
+
+Coloca aquí las capturas con EXACTAMENTE estos nombres. Mientras falten, el
+manual muestra un hueco con el nombre del archivo pendiente; en cuanto pongas
+el archivo, la imagen aparece sola (no hay que tocar el HTML).
+
+Formato: PNG. El manual las muestra a ~820 px de ancho, así que con el doble
+(≈1600 px de ancho) se ven nítidas en pantallas de alta densidad.
+
+Orientación: casi todas son apaisadas (la ventana de la aplicación). Las que son
+paneles pequeños pueden recortarse más ajustadas; "ajustes.png" es la única
+claramente vertical (la página es un scroll largo).
+
+Lista de capturas esperadas
+-------------------------------------------------------------------------------
+  Nombre del archivo               Contenido                                   Orientación  Tamaño sugerido (px)
+  -------------------------------  ------------------------------------------  -----------  --------------------
+  inicio.png                       Bienvenida ("Bienvenido a ApeoWind")        Horizontal   1600 x 1000
+  ajustes-conexion.png             Ajustes: modo y endpoint de la plataforma   Horizontal   1600 x 1000
+  controlar-apeo.png               Pagina "Controlar Apeo" (toggle + pestanas) Horizontal   1600 x 1000
+  control-manual.png               Pestana "Control manual" (4 diales)         Horizontal   1600 x 900
+  rotar-eje.png                    Control "Rotar un eje en bucle"             Horizontal   1200 x 800
+  reproducir-csv.png               "Reproducir archivo CSV" (config abierta)   Horizontal   1400 x 1000
+  vision-artificial.png            Control de vision artificial                Horizontal   1000 x 700
+  camara.png                       Panel de camara: video en directo + ajustes Horizontal   1600 x 1000
+  giroestabilizacion-ajustes.png   Ajustes de giroestabilizacion              Horizontal   1200 x 1000
+  calibrar-pids.png                Pagina "Calibracion de PID"                 Horizontal   1600 x 1000
+  descargar-imagenes.png           "Descargar imagenes" (arbol + miniaturas)   Horizontal   1600 x 1000
+  ajustes.png                      Pagina de "Ajustes" completa                Vertical     1200 x 1700
